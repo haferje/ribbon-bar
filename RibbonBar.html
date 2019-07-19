@@ -1,186 +1,153 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML Strict//EN">
 <html><head><title></title>
+
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/smoothness/jquery-ui.css" type="text/css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
 <style type="text/css">
+
+body {
+	font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+	font-size: 62.5%;
+}
+
+/*Override*/
+.ribbon * ul, .ribbon * li
+{
+	margin: 0;
+	padding: 0;
+	/*border: 0;*/
+	float: left;
+	list-style-type: none;
+}
+.ribbon.ui-tabs .ui-tabs-panel
+{
+	padding: 3px 2px 0px 2px !important;
+	overflow: auto;		/* expand this to child height */
+}
+.ribbon-group
+{
+	margin-right: 2px !important;
+	padding: 2px;
+	display: block;
+	float: left;
+	/*margin: 2px 0 2px 5px;*/
+	overflow: hidden;		/* so label corners don't poke through border radius */
+	position: relative;
+	border: 1px solid #AAA;
+	border-radius: 4px;
+		-moz-border-radius: 4px;
+		-webkit-border-radius: 4px;
+}
+.ribbon-group > label
+{
+	display: block;
+    padding: 1px;
+    margin: 0px 0 0 0;
+    font-size: 1.1em;
+    text-align: center;
+    background-color: #e6e6e6;
+    clear: both;		/* label only on the bottom */
+}
+button.ribbon-button
+{
+	margin: 2px;
+}
+button.ribbon-button img
+{
+	display: block;
+	margin: auto auto;
+}
 
 </style>
 <script type="text/javascript">
 
-
-/* Simple JavaScript Inheritance
- * By John Resig http://ejohn.org/
- * MIT Licensed.
- */
-// Inspired by base2 and Prototype
-(function(){
-  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
- 
-  // The base Class implementation (does nothing)
-  this.Class = function(){};
- 
-  // Create a new Class that inherits from this class
-  Class.extend = function(prop) {
-    var _super = this.prototype;
-   
-    // Instantiate a base class (but only create the instance,
-    // don't run the init constructor)
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-   
-    // Copy the properties over onto the new prototype
-    for (var name in prop) {
-      // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-        (function(name, fn){
-          return function() {
-            var tmp = this._super;
-           
-            // Add a new ._super() method that is the same method
-            // but on the super-class
-            this._super = _super[name];
-           
-            // The method only need to be bound temporarily, so we
-            // remove it when we're done executing
-            var ret = fn.apply(this, arguments);        
-            this._super = tmp;
-           
-            return ret;
-          };
-        })(name, prop[name]) :
-        prop[name];
-    }
-   
-    // The dummy class constructor
-    function Class() {
-      // All construction is actually done in the init method
-      if ( !initializing && this.init )
-        this.init.apply(this, arguments);
-    }
-   
-    // Populate our constructed prototype object
-    Class.prototype = prototype;
-   
-    // Enforce the constructor to be what we expect
-    Class.prototype.constructor = Class;
- 
-    // And make this class extendable
-    Class.extend = arguments.callee;
-   
-    return Class;
-  };
-})();
-
-
-
-	var Ribbon = Class.extend({
-		tabs: [],
-		init: function(options){
-			if (options.tabs)
-				for (var i in options.tabs)
-					this.tabs.push(new RibbonTab(options.tabs[i]));
-		},
-		render: function(id){
-			var header = '';
-			var content = '';
-			for (var i in this.tabs) {
-				var t = this.tabs[i];
-				header += '<li><a href="#'+t.id+'">'+t.label+'</a></li>';
-				content += '<div id="'+t.id+'"></div>';
-			}
-			header = '<ul>'+header+'</ul>'
-			$('#'+id).html(header+content);
-		}
-	});
-	var RibbonTab = Class.extend({
-		id: '',
-		label: '',
-		groups: [],
-		init: function(options){
-			if (options.groups)
-				for (var i in options.groups)
-					this.groups.push(new RibbonGroup(options.groups[i]));
-			this.id = options.id;
-			this.label = options.label;
-		},
-		render: function(){
-
-		}
-	});
-	var RibbonGroup = Class.extend({
-		items: [],
-		init: function(options){
-			// if (options.items)
-			// 	for (var i in items)
-			// 		items.push(new RibbonTab(items[i]));
-		},
-		render: function(){
-
-		}
-	});
-	// var RibbonButton = Class.extend({
-	// 	tabs: [],
-	// 	init: function(options){
-	// 		if (options.tabs)
-	// 			for (var i in tabs)
-	// 				tabs.push(new RibbonTab(tabs[i]));
-	// 	},
-	// 	render: function(){
-
-	// 	}
-	// });
-	// var RibbonButtonGrop = Class.extend({
-	// 	tabs: [],
-	// 	init: function(options){
-	// 		if (options.tabs)
-	// 			for (var i in tabs)
-	// 				tabs.push(new RibbonTab(tabs[i]));
-	// 	},
-	// 	render: function(){
-
-	// 	}
-	// });
-$(document).ready(function(){
-
-	var R = new Ribbon({
-		tabs: [{
-			id: 'tab1',
-			label: 'Tab1',
-			groups: [{
-				id: 'group1',
-				label: 'Group1',
-				items: [{
-					id: 'button1',
-					type: 'button',
-					label: 'Button1',
-					image: ''
-				}]
-			}, {
-				id: 'group2',
-				label: 'Group2'
-			}, {
-				id: 'group3',
-				label: 'Group3'
-			}]
-		}, {
-			id: 'tab2',
-			label: 'Tab2'
-		}, {
-			id: 'tab3',
-			label: 'Tab3'
-		}]
-	});
-
-	R.render('ribbon');
-
+$(function() {
+	$("#tabs").tabs();
+	$(".ribbon-button").button();
 });
 
 </script>
-</head>
+
 <body>
 
-<div id="ribbon"></div>
+
+<div id="tabs" class="ribbon">
+	<ul class="ribbon-tabs">
+		<li><a href="#tab-quoting">Quoting</a></li>
+		<li><a href="#tab-orders">Orders</a></li>
+		<li><a href="#tab-purchasing">Purchasing</a></li>
+	</ul>
+	<div id="tab-quoting" class="ribbon-tab-content">
+
+		<ul class="ribbon-groups">
+			<li class="ribbon-group">
+				
+				<ul>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>asdfasdf</label>
+							<div>v</div>
+						</button>
+					</li>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>asdfasdf asd asdf asdf</label>
+							<!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAABbSURBVCjPY/jPgB8yDCkFB/7v+r/5/+r/i/7P+N/3DYuC7V93/d//fydQ0Zz/9eexKFgtsejLiv8b/8/8X/WtUBGrGyZLdH6f8r/sW64cTkdWSRS+zpQbgiEJAI4UCqdRg1A6AAAAAElFTkSuQmCC" />-->
+							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAXSURBVBhXY2BAA////4eLgNhADBGCMADvQBHvcMAKOgAAAABJRU5ErkJggg==" />
+						</button>
+					</li>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>as</label>
+							<img src="asdf.png" />
+						</button>
+					</li>
+				</ul>
+
+				<label>Group</label>
+			</li>
+			<li class="ribbon-group">
+				
+				<ul>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>asdfasdf</label>
+						</button>
+					</li>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>asdfasdf</label>
+						</button>
+					</li>
+					<li>
+						<button class="ribbon-button">
+							<img src="asdf.png" />
+							<label>asdfasdf</label>
+						</button>
+					</li>
+				</ul>
+
+				<label>Group</label>
+			</li>
+			<li class="ribbon-group">asdfasdf<label>Group</label></li>
+			<li class="ribbon-group">asdfasdf<label>Group</label></li>
+		</ul>
+
+	</div>
+	<div id="tab-orders">
+		
+	</div>
+	<div id="tab-purchasing">
+		
+	</div>
+</div>
 
 
 </body>
