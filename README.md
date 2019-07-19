@@ -4,7 +4,7 @@
 
 #### About
 
-This is a utility that was meant to help me organize and place game pieces in my camp for the mobile game Clash & GO: AR Strategy, to find the best defensive strategy.
+This was a prototype build of a web element to replicate the Microsoft Office Ribbon Bar.  It was created for a project at work and later scrapped.
 
 #### Run
 
