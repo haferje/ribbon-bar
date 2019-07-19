@@ -1,250 +1,187 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML Strict//EN">
 <html><head><title></title>
-	
-<script src="/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
-
-	
-<script src="/Scripts/jquery-ui-1.9.1.custom.min.js" type="text/javascript"></script>
-
-	
-<script src="/Scripts/json2.js" type="text/javascript"></script>
-
-	
-<script src="/Scripts/jquery.blockUI.js" type="text/javascript"></script>
-
-	
-	<link href="/Content/Styles/themes/smoothness/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css" />
-	<link href="/Content/Styles/Site.css" rel="stylesheet" type="text/css" />
-	<link href="/Content/Styles/STLayout.css" rel="stylesheet" type="text/css" />
-	<link href="/Content/Styles/STActionBar.css" rel="stylesheet" type="text/css" media="all" />   
-
-	
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <style type="text/css">
- .ui-layout-north {
-  padding: 0px;
-  overflow: hidden;
- }
- .ui-layout-center {
-  padding: 0px;
-  overflow: hidden;
- }
- .ui-layout-west {
-  padding: 0px;
-  overflow: hidden;
- }
- .ui-layout-east {
-  padding: 0px;
-  overflow: hidden;
- }
- .ui-layout-east .ui-layout-content {
-  padding: 0px;
-  overflow: hidden;
- }
- .ui-layout-center p.ui-layout-content {
-  margin: 0px;
-  line-height: 1.4em;
- }
- .ui-layout-center .ui-tabs-nav {
-  padding-bottom: 0px !important;
-  border-top-color: currentColor;
-  border-right-color: currentColor;
-  border-left-color: currentColor;
-  border-top-width: 0px;
-  border-right-width: 0px;
-  border-left-width: 0px;
-  border-top-style: none;
-  border-right-style: none;
-  border-left-style: none;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
- }
- .ui-layout-center .ui-tabs .ui-tabs-panel {
-  padding: 0px !important;
-  border-top-color: currentColor;
-  border-right-color: currentColor;
-  border-left-color: currentColor;
-  border-top-width: 0px;
-  border-right-width: 0px;
-  border-left-width: 0px;
-  border-top-style: none;
-  border-right-style: none;
-  border-left-style: none;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
- }
- </style>
+
+</style>
+<script type="text/javascript">
 
 
-
- <script src="/Scripts/ToolStrip.js" type="text/javascript"></script>
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function(){
+  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
  
- 		
- <div class="st-north" id="paneNorth">
-  
-  			
-  <div class="ui-tabs ui-widget ui-widget-content ui-corner-all" id="maintoolstrip" style="display: block;">
+  // The base Class implementation (does nothing)
+  this.Class = function(){};
+ 
+  // Create a new Class that inherits from this class
+  Class.extend = function(prop) {
+    var _super = this.prototype;
+   
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+   
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+      // Check if we're overwriting an existing function
+      prototype[name] = typeof prop[name] == "function" &&
+        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+        (function(name, fn){
+          return function() {
+            var tmp = this._super;
+           
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
+           
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            var ret = fn.apply(this, arguments);        
+            this._super = tmp;
+           
+            return ret;
+          };
+        })(name, prop[name]) :
+        prop[name];
+    }
+   
+    // The dummy class constructor
+    function Class() {
+      // All construction is actually done in the init method
+      if ( !initializing && this.init )
+        this.init.apply(this, arguments);
+    }
+   
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+   
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+ 
+    // And make this class extendable
+    Class.extend = arguments.callee;
+   
+    return Class;
+  };
+})();
 
 
 
+	var Ribbon = Class.extend({
+		tabs: [],
+		init: function(options){
+			if (options.tabs)
+				for (var i in options.tabs)
+					this.tabs.push(new RibbonTab(options.tabs[i]));
+		},
+		render: function(id){
+			var header = '';
+			var content = '';
+			for (var i in this.tabs) {
+				var t = this.tabs[i];
+				header += '<li><a href="#'+t.id+'">'+t.label+'</a></li>';
+				content += '<div id="'+t.id+'"></div>';
+			}
+			header = '<ul>'+header+'</ul>'
+			$('#'+id).html(header+content);
+		}
+	});
+	var RibbonTab = Class.extend({
+		id: '',
+		label: '',
+		groups: [],
+		init: function(options){
+			if (options.groups)
+				for (var i in options.groups)
+					this.groups.push(new RibbonGroup(options.groups[i]));
+			this.id = options.id;
+			this.label = options.label;
+		},
+		render: function(){
+
+		}
+	});
+	var RibbonGroup = Class.extend({
+		items: [],
+		init: function(options){
+			// if (options.items)
+			// 	for (var i in items)
+			// 		items.push(new RibbonTab(items[i]));
+		},
+		render: function(){
+
+		}
+	});
+	// var RibbonButton = Class.extend({
+	// 	tabs: [],
+	// 	init: function(options){
+	// 		if (options.tabs)
+	// 			for (var i in tabs)
+	// 				tabs.push(new RibbonTab(tabs[i]));
+	// 	},
+	// 	render: function(){
+
+	// 	}
+	// });
+	// var RibbonButtonGrop = Class.extend({
+	// 	tabs: [],
+	// 	init: function(options){
+	// 		if (options.tabs)
+	// 			for (var i in tabs)
+	// 				tabs.push(new RibbonTab(tabs[i]));
+	// 	},
+	// 	render: function(){
+
+	// 	}
+	// });
+$(document).ready(function(){
+
+	var R = new Ribbon({
+		tabs: [{
+			id: 'tab1',
+			label: 'Tab1',
+			groups: [{
+				id: 'group1',
+				label: 'Group1',
+				items: [{
+					id: 'button1',
+					type: 'button',
+					label: 'Button1',
+					image: ''
+				}]
+			}, {
+				id: 'group2',
+				label: 'Group2'
+			}, {
+				id: 'group3',
+				label: 'Group3'
+			}]
+		}, {
+			id: 'tab2',
+			label: 'Tab2'
+		}, {
+			id: 'tab3',
+			label: 'Tab3'
+		}]
+	});
+
+	R.render('ribbon');
+
+});
+
+</script>
+</head>
+<body>
+
+<div id="ribbon"></div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="ui-tabs-panel ui-widget-content ui-corner-bottom" id="maintoolstrip_QUOTE" role="tabpanel" aria-expanded="true" aria-hidden="false" aria-labelledby="ui-id-1">
-    
-                
-    <div class="ts5000 clearfix">
-     
-                 
-     <ul>
-      
-                      
-                              
-                              
-      <li class="toolstrip-group">
-       
-                                   
-       <div style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
-        
-                                        
-        <ul>
-         
-                                             
-                                                     
-                                                     
-         <li class="toolstrip-item">
-          
-                                                          <a href="javascript:$ST.mainToolStripNavigate('Quote');">
-                                                          <img alt="Item" src="Content/images/icons/quotation_32.png" />
-                                                              <br />
-                                                              Quotations
-                                                          </a>
-                                                      
-         </li>
-         
-                                                 
-                                                     
-         <li class="toolstrip-item">
-          
-                                                          <a href="javascript:$ST.mainToolStripNavigate('CustomerRFQ');">
-                                                          <img alt="Item" src="Content/images/icons/customer_rfq_32.png" />
-                                                              <br />
-                                                              Customer Request <br /> For Quotation
-                                                          </a>
-                                                      
-         </li>
-         
-                                                 
-                                                 
-                                         
-        </ul>
-        
-                                        
-        <div style="clear: both;"></div>
-        
-                                    
-       </div>
-       
-                                   
-       <h3>
-        Data Entry Items
-       </h3>
-       
-                                   
-       <div style="clear: both;"></div>
-       
-                               
-      </li>
-      
-                          
-                              
-      <li class="toolstrip-group">
-       
-                                   
-       <div style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
-        
-                                        
-        <ul>
-         
-                                             
-                                                     
-                                                     
-         <li class="toolstrip-item">
-          
-                                                          <a href="javascript:$ST.mainToolStripNavigate('QuotationSummary');">
-                                                          <img alt="Item" src="Content/images/icons/report_32.png" />
-                                                              <br />
-                                                              Quotation <br /> Summary
-                                                          </a>
-                                                      
-         </li>
-         
-                                                 
-                                                     
-         <li class="toolstrip-item">
-          
-                                                          <a href="javascript:$ST.mainToolStripNavigate('CustomerRFQSummary');">
-                                                          <img alt="Item" src="Content/images/icons/report_32.png" />
-                                                              <br />
-                                                              Customer RFQ <br /> Summary
-                                                          </a>
-                                                      
-         </li>
-         
-                                                 
-                                                     
-         <li class="toolstrip-item">
-          
-                                                          <a href="javascript:$ST.mainToolStripNavigate('QuoteCrossReference');">
-                                                          <img alt="Item" src="Content/images/icons/report_32.png" />
-                                                              <br />
-                                                              Quotation Cross <br /> Reference
-                                                          </a>
-                                                      
-         </li>
-         
-                                                 
-                                                 
-                                         
-        </ul>
-        
-                                        
-        <div style="clear: both;"></div>
-        
-                                    
-       </div>
-       
-                                   
-       <h3>
-        Reports
-       </h3>
-       
-                                   
-       <div style="clear: both;"></div>
-       
-                               
-      </li>
-      
-                          
-                          
-                  
-     </ul>
-     
-                 
-    </div>
-    
-                
-    <div style="clear: both;"></div>
-    
-            
-   </div>
+</body>
+</html>
