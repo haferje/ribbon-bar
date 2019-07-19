@@ -1,10 +1,829 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML Strict//EN">
-<html><head><title></title>
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<title></title>
 
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/smoothness/jquery-ui.css" type="text/css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 
+<script type="text/javascript">
+
+/*
+TODO:
+==========================================================
+	tabs
+		# add tab objects to ribbonbar
+		# scroll overflow if tabs go beyond window boundaries
+	contextual tab
+		should be a separate item from regular ribbons
+		should have custom function to set contextual tab content
+		# tab will have different color and a glow around it
+		# content area will have white background
+	ribbon
+		# scroll overflow if button groups go beyond window boundaries
+	buttons
+		# wire up onClick event
+		# shrink-wrap labels by space closest to middle of text size, to split on two lines and expand width beyond that
+	dropdowns
+		close when mouseout or click out
+		offset placement if close to window boundaries
+		keep button active when mouse off
+		X may not need button-options element
+		X gradient fade-out in place of title/description ellipses
+		# open/close on click
+		# triple column dropdown
+	global
+		# need to call updatescrollers() or homemade refresh() after adding elements
+		# combine button-large and button-drop into button
+		# condense css classes to ribbon-X
+		add config options to HTML
+		keyboard shortcuts
+		# load ribbon as JS object we can modify
+	scrollers
+		# rename this 'extension'
+		# animate scroll
+		# scroll only visible width, not 5000
+	css
+		replace data uri with image references
+issues:
+==========================================================
+	scroller
+		# squish till scroller shows, press right button, squish again, don't get right button again
+	buttons
+		allow only optionGroups or options, not both
+		when adding a button, must set numColumns > 0, or options or optionGroups must be defined to be a dropdown button
+		# dropdown one button and click on another non-dropdown, dropdown still shows from first
+	groups
+		X long labels expand the group - need to hide overflow and ellipse them
+*/
+
+
+// Shorthand for $(document).ready()
+$(function() {
+
+	//var rb = new RibbonBar("#tabs");
+
+	// var tabs = $("#tabs").tabs({
+	// 	collapsible: false,
+	// 	//activate: updateRibbons		/* HACK (IE): IE won't modify elements if they are hidden, so need to do it when activated */
+	// }).tabs("widget");
+	// console.log(tabs);
+	
+	var ribbonBar = $("#tabs").Ribbonize();
+	
+
+	// (function(){
+
+		
+		// updatescrollers();
+
+	// })();
+
+
+
+	//ribbons[0].$elem.hide();
+
+	// =============================================
+	// add new group to existing ribbon
+	// =============================================
+	// ribbons[0].addGroup(1, {
+	// 	label: 'This is new label 1'
+	// });
+	// ribbons[0].addGroup(null, {
+	// 	label: 'This is new label 2'
+	// });
+	// ribbons[0].addGroup(0, {
+	// 	label: 'This is new label 3'
+	// });
+
+	// ribbons[0].groups[1].$elem.hide();
+
+	// =============================================
+	// add new button to existing group
+	// =============================================
+	// ribbons[0].groups[0].addButton(1, {
+	// 	label: 'New Button 1',
+	// 	options: [{
+	// 	}]
+	// });
+	// ribbons[0].groups[0].addButton(null, {
+	// 	label: 'New Button 2',
+	// 	groups: [{
+	// 		label: 'New Option Group 1'
+	// 	}]
+	// });
+	// ribbons[0].groups[0].addButton(0, {
+	// 	label: 'New Button 3'
+	// });
+
+	// ribbons[0].groups[0].buttons[2].$elem.hide();
+
+	// =============================================
+	// add new option to existing button
+	// =============================================
+	// ribbons[0].groups[0].buttons[1].addOption(1, {
+	// 	title: 'New Option 1 Title',
+	// 	description: 'New Option 1 Description'
+	// });
+	// ribbons[0].groups[0].buttons[1].addOption(null, {
+	// 	title: 'New Option 2 Title',
+	// 	description: 'New Option 2 Description'
+	// });
+	// ribbons[0].groups[0].buttons[1].addOption(0, {
+	// 	title: 'New Option 3 Title',
+	// 	description: 'New Option 3 Description'
+	// });
+	
+	// ribbons[0].groups[0].buttons[1].options[2].$elem.hide();
+
+	// =============================================
+	// add new option to existing optionGroup
+	// =============================================
+	// ribbons[0].groups[1].buttons[1].optionGroups[0].addOption(1, {
+	// 	title: 'New Option 1 Title',
+	// 	description: 'New Option 1 Description'
+	// });
+	// ribbons[0].groups[1].buttons[1].optionGroups[0].addOption(null, {
+	// 	title: 'New Option 2 Title',
+	// 	description: 'New Option 2 Description'
+	// });
+	// ribbons[0].groups[1].buttons[1].optionGroups[0].addOption(0, {
+	// 	title: 'New Option 3 Title',
+	// 	description: 'New Option 3 Description'
+	// });
+
+	// ribbons[0].groups[1].buttons[1].optionGroups[0].options[2].$elem.hide();
+
+	// ################################################################################################################################
+
+	// =============================================
+	// add new items to new Group
+	// =============================================
+	// ribbons[0].addGroup(null, {
+	// 	label: 'New Group'
+	// });
+	// ribbons[0].groups[2].addButton(null, {
+	// 	label: 'New Button',
+	// 	numColumns: 1			// numColumns > 0 or options or optionGroups must be defined to be a dropdown button
+	// });
+	// ribbons[0].groups[2].buttons[0].addOption(null, {
+	// 	title: 'New Option title',
+	// 	description: 'New Option description'
+	// });
+	// ribbons[0].groups[2].buttons[0].addOptionGroup(null, {
+	// 	label: 'New Option Group'
+	// });
+	// ribbons[0].groups[2].buttons[0].optionGroups[0].addOption(null, {
+	// 	title: 'New Option title',
+	// 	description: 'New Option description'
+	// });
+
+	// ribbons[0].groups[2].buttons[0].optionGroups[0].options[0].$elem.hide();
+	// ribbons[0].groups[2].buttons[0].optionGroups[0].$elem.hide();
+	// ribbons[0].groups[2].buttons[0].$elem.hide();
+	// ribbons[0].groups[2].$elem.hide();
+
+	// ################################################################################################################################
+
+	// =============================================
+	// add new items as a chunk
+	// =============================================
+	ribbonBar.ribbons[0].addGroup(null, {
+		label: 'New Group',
+		buttons: [{
+			label: 'New Button 1',
+		},{
+			label: 'New Button 4',
+			onClick: function(){
+				alert('you clicked my button');
+			}
+		},{
+			label: 'New Button 2 really long title fizz buzz',
+			options: [{
+				title: 'New Option 1 title',
+				description: 'New Option 1 description'
+			},{
+				title: 'New Option 2 title',
+				description: 'New Option 2 description'
+			}]
+		},{
+			label: 'New Button 3',
+			numColumns: 2,
+			optionGroups: [{
+				label: 'New OptionGroup 1',
+				options: [{
+					title: 'New Option 1 title',
+					description: 'New Option 1 description'
+				},{
+					title: 'New Option 2 title',
+					description: 'New Option 2 description'
+				},{
+					title: 'New Option 3 title',
+					description: 'New Option 3 description'
+				}]
+			},{
+				label: 'New OptionGroup 2',
+				options: [{
+					title: 'New Option 1 title',
+					description: 'New Option 1 description'
+				},{
+					title: 'New Option 2 title',
+					description: 'New Option 2 description'
+				},{
+					title: 'New Option 3 title',
+					description: 'New Option 3 description'
+				}]
+			}]
+		}]
+	});
+
+	ribbonBar.addRibbon(null, {
+		label: 'New Tab',
+		groups: [{
+			label: 'New Group',
+			buttons: [{
+				label: 'New Button'
+			}]
+		}]
+	});
+
+	ribbonBar.addRibbon(null, {
+		label: 'New Contextual Tab',
+		isContextual: true,
+		groups: [{
+			label: 'New Group',
+			buttons: [{
+				label: 'New Button'
+			}]
+		}]
+	});
+	
+
+	// updatescrollers();
+
+});
+
+
+
+(function($){
+
+	// outside so we can Ribbonize() again later without overwriting existing ones
+	// all the closed scopes below will be accessible by the ribbons[] array which will be returned
+	//var ribbons = [];
+
+	$.fn.Ribbonize = function() {
+
+		//this.each(function(){
+			var $this = $(this);
+			var ribbons = [];
+
+			$(this).find(".ribbons .ribbon-tab-content").each(function(){
+				var $this = $(this);
+				var groups = [];
+
+				$(this).find(".ribbon-group").each(function(){
+					var $this = $(this);
+					var buttons = [];
+
+					$(this).find(".ribbon-button").each(function(){
+						var $this = $(this);
+						var options = [];
+						var optionGroups = [];
+
+						$(this).find(".ribbon-option:not(.ribbon-optgroup .ribbon-option)").each(function(){
+							var $this = $(this);
+
+							options.push(new Option({
+								$elem: $this,
+								// image: null,
+								title: $this.find(".ribbon-option-title").text(),
+								description: $this.find(".ribbon-option-description").text()
+								// href: null,
+								// onClick: null
+							}));
+						});
+
+						$(this).find(".ribbon-optgroup").each(function(){
+							var $this = $(this);
+							var options = [];
+
+							$(this).find(".ribbon-option").each(function(){
+								var $this = $(this);
+
+								options.push(new Option({
+									$elem: $this,
+									// image: null,
+									title: $this.find(".ribbon-option-title").text(),
+									description: $this.find(".ribbon-option-description").text()
+									// href: null,
+									// onClick: null
+								}));
+							}); // each ribbon-option
+
+							optionGroups.push(new OptionGroup({
+								$elem: $this,
+								$childContainer: $this.find(".ribbon-options"),
+								label: $this.find(".ribbon-optgroup-label").text(),
+								options: options
+							}));
+						}); // each ribbon-optgroup
+
+						var $dropElem = $this.find(".ribbon-button-drop");
+						var isDrop = ($dropElem[0]) ? true : false;
+						buttons.push(new Button({
+							$elem: $this,
+							$childContainer: $this.find(".ribbon-drop-content"),
+							// image: null,
+							label: $this.find(".ribbon-button-label").text(),
+							isDrop: isDrop,
+							$dropElem: $dropElem,
+							numColumns: (!isDrop) ? 0 : (($dropElem.hasClass("triple-column") ? 3 : (($dropElem.hasClass("double-column") ? 2 : 1)))),
+							// href: null,
+							// onClick: null,
+							options: options,
+							optionGroups: optionGroups
+						}));
+					}); // each ribbon-button
+
+					groups.push(new Group({
+						$elem: $this,
+						label: $this.find(".ribbon-button-label").text(),
+						buttons : buttons
+					}));
+				}); // each ribbon-group
+
+				ribbons.push(new Ribbon({
+					$elem: $this,
+					$childContainer: $this.find(".ribbon-groups"),
+					groups: groups
+				}));
+			}); // each ribbon-tab-content
+
+			//return ribbons;
+
+			return new RibbonBar({
+				tabsSelector: this.selector,
+				$tabContainer: $this.find(".ribbon-tabs"),
+				$ribbonContainer: $this.find(".ribbons"),
+				ribbons: ribbons
+			});
+
+		//}); // each selector
+		
+	};
+
+
+
+
+	var Utils = {
+		// this may or may not be a good thing... we'll see...
+		// splits a line of text nearest to its midpoint to best balance text on two separate lines
+		splitText: function(text) {
+			var tokens = text.split(' ');
+
+			if (tokens.length == 1) return text;
+			
+			var half = Math.ceil(text.length / 2),	// include spaces
+				lowCount = 0,
+				highCount = 0,
+				lowIndex = 0;
+
+			for (var t = 0; t < tokens.length; t++)
+			{
+				lowCount = highCount;
+				highCount += tokens[t].length + 1;		// include space
+				if (highCount >= half) {
+					lowIndex = (highCount-half < half-lowCount) ? t : t-1;	// give it to whatever side already has most of it
+					break;
+				}
+			}
+
+			tokens[lowIndex] += "<br/>";
+			return tokens.join(' ');
+		},
+		toggleButtonDrop: function(e) {
+			var $dropElem = $(this).find(".ribbon-button-drop");
+
+			e.preventDefault();
+			$(".ribbon-button-drop").not($dropElem).hide();
+			$dropElem.toggle();
+		// },
+		// redirect: function(url) {
+		// 	url = (!url || url=='') ? '' : url;
+		// 	console.log(url);
+		},
+		idFromText: function(text) {
+			return text.toLowerCase().split(' ').join('');
+		}
+	};
+
+
+
+
+	var RibbonBar = function(options) {
+		var defaults = {
+			tabsSelector: '',
+			$tabContainer: null,
+			$ribbonContainer: null,
+			ribbons: []
+		};
+		// merge default options with initialization options, then apply the result to the object itself
+		var self = $.extend(this, $.extend({}, defaults, options));
+		$(self.tabsSelector).tabs({
+			collapsible: false,
+			activate: self.updateScrollerContents		/* HACK (IE): IE won't modify elements if they are hidden, so need to do it when activated */
+		});
+
+		// trigger initial update in case we dynamically add ribbon items
+		$(function(){
+			self.update();
+		});
+
+		$(window).resize(self.updateScrollerContents);
+	}
+	RibbonBar.prototype = {
+		tabsSelector: '',
+		$tabContainer: null,
+		$ribbonContainer: null,
+		//tabs: [],
+		ribbons: [],
+
+		addRibbon: function(idx, options){
+			idx = (options.isContextual) ? null : idx;
+			var contextualClass = (options.isContextual) ? 'ribbon-contextual' : '';
+			var $tabElem = $('<li/>', { class: contextualClass }).append($('<a/>', { href: '#tab-'+Utils.idFromText(options.label), text: options.label }));
+			options.$elem = $('<div/>', { id: 'tab-'+Utils.idFromText(options.label), class: 'ribbon-tab-content scroller-container '+contextualClass });
+			options.$childContainer = $('<div/>', { class: 'ribbon-groups scroller-parent '+contextualClass });
+			options.$elem
+				.append($('<div/>', { class: 'scroller-buttons' })
+					.append($('<div/>', { class: 'scroller-button-left' }))
+					.append($('<div/>', { class: 'scroller-button-right' })))
+				.append($('<div/>', { class: 'scroller-content' })
+					.append(options.$childContainer))
+			// options.$elem.append(
+			// 	'<div class="scroller-buttons">'+
+			// 		'<div class="scroller-button-left"></div>'+
+			// 		'<div class="scroller-button-right"></div>'+
+			// 	'</div>'+
+			// 	'<div class="scroller-content">'+
+			// 		'<div class="ribbon-groups scroller-parent">'+
+			// 		'</div>'+
+			// 	'</div>'
+			// );
+
+			var newRibbon = new Ribbon(options);
+			if (idx == null) {
+				this.$tabContainer.append($tabElem);
+				this.$ribbonContainer.append(options.$elem);	// really doesn't matter what order it is in
+				this.ribbons.push(newRibbon);
+			}
+			else {
+				$(this.$tabContainer.find("li")[idx]).before($tabElem);
+				this.ribbons[idx].$elem.before(options.$elem);	// really doesn't matter what order it is in
+				this.ribbons.splice(idx, 0, newRibbon);
+			}
+
+			$(this.tabsSelector).tabs('refresh');
+			this.updateScrollerButtons();
+
+			// render children
+			$(options.groups).each(function(){
+				newRibbon.addGroup(null, this);
+			});
+		},
+		update: function() {
+			this.updateScrollerButtons();
+			this.updateScrollerContents();
+		},
+		updateScrollerButtons: function() {
+			var self = this;
+			// scroll click handlers
+			$(".scroller-container").each(function(){
+				var $this = $(this);
+				var $scroller = $this.find(".scroller-content");
+				
+				$this.find(".scroller-button-left").unbind('click').click((function($scroller){
+					return function(e) {
+						//$scroller.scrollLeft(0);
+						$scroller.animate({scrollLeft: $scroller.scrollLeft()-$scroller.width()}, 300, function(){
+							self.updateScrollerContents();
+						});
+						e.stopPropagation();
+						return false;
+					}
+				})($scroller));
+				$this.find(".scroller-button-right").unbind('click').click((function($scroller){
+					return function(e) {
+						// $scroller.scrollLeft(5000);
+						$scroller.animate({scrollLeft: $scroller.scrollLeft()+$scroller.width()}, 300, function(){
+							self.updateScrollerContents();
+						});
+						e.stopPropagation();
+						return false;
+					}
+				})($scroller));
+			});
+		},
+		updateScrollerContents: function() {
+			$(".scroller-container").each(function(){
+				var $this = $(this);
+
+				// resize ribbon-groups width to contain children, possibly overflowing ribbon-tab-content
+				$this.find(".scroller-parent").each(function(){
+					var $parent = $(this);
+					
+					var sum = 0;
+					$parent.width(5000);		/* HACK - fix for revisiting tabs and incorrect outerWidth inheritance */
+					$parent.children().each(function(){
+						sum += ~~$(this).outerWidth(true)+1;	/* HACK (IE) - rounding issue or something */
+					});
+					$parent.width(Math.max(sum, $parent.parent().innerWidth()));
+				});
+
+				// if scrollWidth > clientWidth, then we have overflow, so set .scrollLeft()
+				$this.find(".scroller-content").each(function(){
+					var $scroller = $(this);
+
+					$this.find(".scroller-button-left, .scroller-button-right").hide();
+					
+					var sw = $scroller.prop('scrollWidth');
+					var cw = $scroller.prop('clientWidth');
+					var sl = $scroller.scrollLeft();
+					if (sw > cw) {
+						if (sl > 0)
+							// NOTE: I hate setting dimensions in javascript, but it is the easiest way for everything to play nice together
+							$this.find(".scroller-button-left").height($scroller.height()).show();
+							// $this.find(".scroller-button-left").show();
+						if (sl <= 0 || sl < (sw - cw))		// in case we shrink, click right, shrink
+							$this.find(".scroller-button-right").height($scroller.height()).show();
+							// $this.find(".scroller-button-right").show();
+					}
+				});
+			});
+		}
+	};
+
+	var Ribbon = function(options) {
+		var defaults = {
+			$elem: null,
+			$childContainer: null,
+			label: '',
+			isContextual: false,
+			groups: []
+		};
+		// merge default options with initialization options, then apply the result to the object itself
+		var self = $.extend(this, $.extend({}, defaults, options));
+	};
+	Ribbon.prototype = {
+		$elem: null,
+		$childContainer: null,
+		label: '',
+		isContextual: false,
+		groups : [],
+
+		addGroup: function(idx, options){
+			options.$elem = $('<div/>', { class: 'ribbon-group' });
+			options.$childContainer = $('<div/>', { class: 'ribbon-buttons' });
+			options.$elem
+				.append(options.$childContainer)
+				.append($('<div/>', { class: 'ribbon-group-label', text: options.label }));
+
+			var newGroup = new Group(options);
+			if (idx == null) {
+				this.$childContainer.append(options.$elem);
+				this.groups.push(newGroup);
+			}
+			else {
+				this.groups[idx].$elem.before(options.$elem);
+				this.groups.splice(idx, 0, newGroup);
+			}
+
+			// render children
+			$(options.buttons).each(function(){
+				newGroup.addButton(null, this);
+			});
+		}
+	};
+
+	var Group = function(options) {
+		var defaults = {
+			$elem: null,
+			$childContainer: null,
+			label: '',
+			buttons: []
+		};
+		var self = $.extend(this, $.extend({}, defaults, options));
+	};
+	Group.prototype = {
+		$elem: null,
+		$childContainer: null,
+		label: '',
+		buttons : [],
+
+		addButton: function(idx, options){
+			var isDrop = ((options.numColumns && options.numColumns > 0) || (options.groups && options.groups.length) || (options.options && options.options.length));
+
+			options.$elem = $('<div/>', { class: 'ribbon-button' });
+			options.$elem
+				.append($('<div/>', { class: 'ribbon-button-image' }))
+				.append($('<div/>', { class: 'ribbon-button-label', html: Utils.splitText(options.label) }));	// text() escapes the <br> we add
+
+			if (isDrop)
+			{
+				options.$childContainer = $('<div/>', { class: 'ribbon-drop-content' });
+				var colClass = (options.numColumns == 3) ? "triple-column" : (options.numColumns == 2) ? "double-column" : "";
+				options.$elem
+					.append($('<div/>', { class: 'ribbon-button-icon' }))
+					.append($('<div/>', { class: 'ribbon-button-drop '+colClass })
+						.append(options.$childContainer)
+					)
+			}
+
+			var newButton = new Button(options);
+			if (idx == null || !this.buttons[idx]) {
+				this.$elem.find(".ribbon-buttons").append(options.$elem);
+				this.buttons.push(newButton);
+			}
+			else {
+				this.buttons[idx].$elem.before(options.$elem);
+				this.buttons.splice(idx, 0, newButton);
+			}
+
+			// render children
+			$(options.options).each(function(){
+				newButton.addOption(null, this);
+			});
+			$(options.optionGroups).each(function(){
+				newButton.addOptionGroup(null, this);
+			});
+		}
+	};
+
+	var Button = function(options) {
+		var defaults = {
+			$elem: null,
+			$childContainer: null,
+			image: '',
+			label: '',
+			href: '',
+			numColumns: 0,
+			isDrop: false,
+			onClick: function(e){
+				alert('default button click');
+			},
+			options: [],
+			optionGroups: []
+		};
+		var self = $.extend(this, $.extend({}, defaults, options));
+
+		// init
+		self.isDrop = (self.isDrop || self.options.length || self.optionGroups.length);
+		if (self.isDrop) {
+			self.numColumns = self.numColumns || 1;
+			// self.onClick = self.onClick || function(e, obj) {
+			// 	Utils.toggleButtonDrop(e, obj.$elem);
+			// };
+			self.$elem.bind('click', Utils.toggleButtonDrop);
+		}
+		else
+			// self.onClick = self.onClick || function(e, obj) {
+			// 	Utils.redirect(e, obj.href);
+			// };
+			self.$elem.bind('click', function(e){
+				$(".ribbon-button-drop").hide();
+				self.onClick(e);
+			});
+
+		// self.$elem.bind("click", function(e){
+		// 	self.onClick(e, self);
+		// });
+
+	};
+	Button.prototype = {
+		$elem: null,
+		$childContainer: null,
+		image: '',
+		label: '',
+		isDrop: false,
+		$dropElem: null,
+		href: '',
+		onClick: null,
+		numColumns: 0,
+		options: [],
+		optionGroups: [],
+
+		addOption: function(idx, options){
+			options.$elem = $('<div/>', { class: 'ribbon-option' });
+			options.$elem
+				.append($('<div/>', { class: 'ribbon-option-image' }))
+				.append($('<div/>', { class: 'ribbon-option-text' })
+					.append($('<div/>', { class: 'ribbon-option-title', text: options.title }))
+					.append($('<div/>', { class: 'ribbon-option-description', text: options.description }))
+				);
+
+			var newOption = new Option(options);
+			if (idx == null || !this.options[idx]) {
+				this.$childContainer.append(options.$elem);
+				this.options.push(newOption);
+			}
+			else {
+				this.options[idx].$elem.before(options.$elem);
+				this.options.splice(idx, 0, newOption);
+			}
+		},
+		addOptionGroup: function(idx, options){
+			options.$elem = $('<div/>', { class: 'ribbon-optgroup' });
+			options.$childContainer = $('<div/>', { class: 'ribbon-options' });
+			options.$elem
+				.append($('<div/>', { class: 'ribbon-optgroup-label', text: options.label }))
+				.after(options.$childContainer);
+
+			var newOptionGroup = new OptionGroup(options);
+			if (idx == null || !this.optionGroups[idx]) {
+				this.$childContainer.append(options.$elem);
+				this.optionGroups.push(newOptionGroup);
+			}
+			else {
+				this.optionGroups[idx].$elem.before(options.$elem);
+				this.optionGroups.splice(idx, 0, newOptionGroup);
+			}
+
+			// render children
+			$(options.options).each(function(){
+				newOptionGroup.addOption(null, this);
+			});
+		}
+	};
+
+	var OptionGroup = function(options) {
+		var defaults = {
+			$elem: null,
+			$childContainer: null,
+			label: '',
+			options: []
+		};
+		var self = $.extend(this, $.extend({}, defaults, options));
+	};
+	OptionGroup.prototype = {
+		$elem: null,
+		$childContainer: null,
+		label: '',
+		options: [],
+
+		addOption: function(idx, options){
+			options.$elem = $('<div/>', { class: 'ribbon-option' });
+			options.$elem
+				.append($('<div/>', { class: 'ribbon-option-image' }))
+				.append($('<div/>', { class: 'ribbon-option-text' })
+					.append($('<div/>', { class: 'ribbon-option-title', text: options.title }))
+					.append($('<div/>', { class: 'ribbon-option-description', text: options.description }))
+				);
+
+			var newOption = new Option(options);
+			if (idx == null || !this.options[idx]) {
+				this.$childContainer.append(options.$elem);
+				this.options.push(newOption);
+			}
+			else {
+				this.options[idx].$elem.before(options.$elem);
+				this.options.splice(idx, 0, newOption);
+			}
+		}
+	};
+
+	var Option = function(options) {
+		var defaults = {
+			$elem: null,
+			image: '',
+			title: '',
+			description: '',
+			href: '',
+			onClick: function(e){
+				alert('default option click');
+			},
+		};
+		var self = $.extend(this, $.extend({}, defaults, options));
+
+		self.$elem.bind("click", function(e){
+			self.onClick(e);
+		});
+	};
+	Option.prototype = {
+		$elem: null,
+		image: '',
+		title: '',
+		description: '',
+		href: '',
+		onClick: null
+	};
+
+
+}(jQuery));
+
+
+
+</script>
 <style type="text/css">
 
 body {
@@ -12,143 +831,424 @@ body {
 	font-size: 62.5%;
 }
 
-/*Override*/
-.ribbon * ul, .ribbon * li
+/*
+	Overrides
+*/
+.ribbonbar.ui-tabs .ui-tabs-panel
 {
-	margin: 0;
-	padding: 0;
-	/*border: 0;*/
-	float: left;
-	list-style-type: none;
-}
-.ribbon.ui-tabs .ui-tabs-panel
-{
-	padding: 3px 2px 0px 2px !important;
+	padding: 3px 2px 3px 2px !important;
 	overflow: auto;		/* expand this to child height */
 }
-.ribbon-group
-{
-	margin-right: 2px !important;
-	padding: 2px;
-	display: block;
+.ribbonbar {
+	padding: 0px !important;
+	/*border: none !important;*/
+}
+.ribbon-tabs {
+	padding: 0px !important;
+	border: none !important;
+}
+.ribbon-tab-content {
+	overflow: hidden !important;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABfCAYAAAApka0OAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZEAMCXoCjqwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABjSURBVBjTlY87DoNQEANnff8TUqTgGAlrU5BEQeIR6PwZWTLTY47ioATUbmQH2UYB1N3vNsmv7W7kBMVG3iPP14IAVFX/VBUIPmprC1Rb9rVD+HD03F5dOeXuwcNHN1Yu/l0Bu9Q0ftg8nnQAAAAASUVORK5CYII=) repeat-x center !important;
+}
+.ribbonbar li.ribbon-contextual {
+	margin: 0px 10px;
+	-webkit-box-shadow: 0px 0px 24px rgba(255, 255, 0, 1);
+	-moz-box-shadow:    0px 0px 24px rgba(255, 255, 0, 1);
+	box-shadow:         0px 0px 24px rgba(255, 255, 0, 1);
+	background-color: #f8f2f1;
+	border-color: yellow;
+}
+.ribbon-tab-content.ribbon-contextual { background: #f8f2f1 !important; }
+/**/
+
+
+.ribbon {
+	overflow: hidden;
+}
+.ribbon-groups {
+	overflow: auto;	/* expand height to children */
+
+	/* HACK
+	see: http://stackoverflow.com/questions/11336377/outerwidthtrue-returns-different-values-two-times-in-a-row-without-reloading
+	if overflow on initial page load, widths of groups are reported incorrectly since they inherit the paren't width.
+	this value is overwritten in the ribbonbar update function
+	*/
+	width: 5000px;
+}
+/*.clearfix{clear:both;}*/
+.ribbon-group {
+	display: inline;
 	float: left;
-	/*margin: 2px 0 2px 5px;*/
-	overflow: hidden;		/* so label corners don't poke through border radius */
-	position: relative;
-	border: 1px solid #AAA;
+	margin-right: 4px;
+	overflow: hidden;	 /*so child element corners don't poke through border radius*/
+
+	border: 2px groove #eee;	/* bit of a 3d look, 2px needed */
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 	border-radius: 4px;
-		-moz-border-radius: 4px;
-		-webkit-border-radius: 4px;
 }
-.ribbon-group > label
-{
-	display: block;
-    padding: 1px;
-    margin: 0px 0 0 0;
-    font-size: 1.1em;
-    text-align: center;
-    background-color: #e6e6e6;
-    clear: both;		/* label only on the bottom */
+.ribbon-group-label {
+	clear: both;	/* below all floats */
+	padding: 2px;
+	height: 12px;
+
+	text-align: center;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAARCAIAAACToVFFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA+SURBVBhXBcGLAcAQDEDBt/8aLaGIiN96vWPfyzqHuTe+FuZOHwM1o/VOVaW0xlcruRQkZ2JKBBHeGHlC+AGryCKGxki74AAAAABJRU5ErkJggg==) repeat-x center;
+	color: white;
 }
-button.ribbon-button
-{
-	margin: 2px;
+.ribbon-group:hover .ribbon-group-label {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAARCAYAAAAcw8YSAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZEAoP8fNkXwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAbSURBVAjXYygoLPzPxMzMzAAhmJiYGJC45BEA2eUC/271roAAAAAASUVORK5CYII=) repeat-x center;
 }
-button.ribbon-button img
-{
-	display: block;
+.ribbon-group:hover .ribbon-buttons {
+	background-color: #f8f2f1 !important; /* e3e5e9 */
+}
+.ribbon-buttons {
+	padding: 2px 0px 0px 2px;
+	overflow: hidden;	/* expand parent to children height */
+}
+.ribbon-button {
+	display: inline;
+	float: left;
+	min-width: 50px;
+	margin-right: 2px;
+	height: 66px;
+
+	border: 1px solid rgba(0,0,0,0);
+}
+.ribbon-button:hover {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABCCAYAAACW2bxLAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZEA8K/O5klQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABfSURBVBjTdY3BDYAwDAMv7v77sQYvRKkSHqitUpVP5Phih/A7RDsR8SCiIqKh8Irs89oATx+e10k9FzAKlsR1IDCEGQIlxfSW1UYsg51nG7A9EYLS660gYKj5svxljRec9jT5BnXyVgAAAABJRU5ErkJggg==) repeat-x center;
+	border: 1px solid grey;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.ribbon-button:active {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABDCAYAAABdhW/uAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZEBYR7YsEYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAB5SURBVBjTdY0xEsIwDARXm4aa/z+KL+QDVBTYcmKKBBOG0Gh2Zu9OtMe92/OJvVXsrWBviWsWZKlIyyHedqf6VctBS8U16z5wyGXBviSW+YYEGCFiYETsRASG8SPO6H/kRGyjITKJ4YQoxnY+f6cjMSwxSI/zXq68AAcMSLTokMFeAAAAAElFTkSuQmCC) repeat-x center;
+}
+.ribbon-button-image {
+	width: 32px;
+	height: 32px;
+	margin: 2px auto;	/* keep centered */
+
+	background-color: yellow;	/*test*/
+}
+.ribbon-button-label {
+	margin: 0px 2px;
+	line-height: 12px;
+	text-align: center;
+
+	height: 24px;
+}
+.ribbon-button-icon {
+	height: 6px;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAYAAABbNsX4AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZExwdHJQemQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAXSURBVAjXY2RgYPjPgAYYofR/LGKoEgBmWAMBxbG1EAAAAABJRU5ErkJggg==) no-repeat center;
+}
+
+
+/* place drop inside button so we can still monitor the hover event! */
+.ribbon-button-drop {
+	position: absolute;		/* drop below button - non-specified top/bottom/left/right indicate auto and mimicks relative values */
+	margin-top: 1px;
+	width: 282px;
+	z-index: 9999;	/* above scroller bars */
+
+	border: 1px solid grey;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	background-color: white;
+
+	display: none;	/* initialize hidden */
+}
+.ribbon-button-drop.double-column {
+	width: 457px;
+}
+.ribbon-button-drop.double-column .ribbon-option {
+	width: 212px;
+}
+.ribbon-button-drop.triple-column {
+	width: 740px;
+}
+.ribbon-button-drop.triple-column .ribbon-option {
+	width: 233px;
+}
+
+.ribbon-drop-content {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding: 1px;
+}
+.ribbon-optgroup {
+	clear: both;
+}
+.ribbon-optgroup-label {
+	line-height: 34px;
+	background-color: #ebebeb;
+	border-bottom: 1px solid #c5c5c5;
+	font-weight: bold;
+	padding-left: 2px;
+}
+.ribbon-options {
+	padding: 1px;
+	overflow: auto;	/* to clear its children */
+}
+.ribbon-option {
+	display: inline;
+	float: left;
+	overflow: hidden;
+	width: 256px;
+	border: 1px solid rgba(0,0,0,0);
 	margin: auto auto;
+	padding: 2px;
+}
+.ribbon-option:hover {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABCCAYAAACW2bxLAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUZEA8K/O5klQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABfSURBVBjTdY3BDYAwDAMv7v77sQYvRKkSHqitUpVP5Phih/A7RDsR8SCiIqKh8Irs89oATx+e10k9FzAKlsR1IDCEGQIlxfSW1UYsg51nG7A9EYLS660gYKj5svxljRec9jT5BnXyVgAAAABJRU5ErkJggg==) 0px -8px repeat-x;
+	border: 1px solid grey;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.ribbon-option-image {
+	display: inline; float: left;
+	width: 32px;
+	height: 32px;
+	
+	background-color: yellow;
+}
+.ribbon-option-text {
+	padding: 0px 4px;
+	overflow: hidden;
+	height: 32px;
+}
+.ribbon-option-title {
+	font-weight: bold;
+}
+.ribbon-option-title,
+.ribbon-option-description {
+	white-space: nowrap;
+	line-height: 16px;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+/*
+container scrolls
+parent expands
+parent children are used to sum the outerWidth
+*/
+.scroller-container {
+	overflow: hidden;
+	/*position: relative;*/
+}
+/*
+HACK
+	need a container with full width, but can't be 'scroller-container' since it would need relative positioning and will break dropdown visibility
+	unless it has its own container with absolute positioning and a programatic height for each button, else it will break button clickability
+	position - normally, we would expect relative positioning
+		http://stackoverflow.com/questions/2243245/css-how-to-have-positionabsolute-div-inside-a-positionrelative-div-not-be-cro
+	height - set programatically...
+		http://stackoverflow.com/questions/5792054/position-relative-overflow-hidden
+*/
+.scroller-buttons {
+	position: absolute;
+	width: 100%;
+}
+.scroller-button-left,
+.scroller-button-right {
+	position: absolute;
+	top: 0;
+	z-index: 100;
+	width: 12px;
+}
+.scroller-button-left {
+	left: 0;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABcCAYAAABTEPRqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUfAzAEeIMhWwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAClSURBVEjHY/z85et/BjyA5d+/fwx4Ffz5+5eBgAn/GSiz4u9fQgr+EXIDYRP+0d6RBK34S3MrCJnw8dNn/AoYGBnxK8AvzcDARECegYWRgBWjJhBpwmhADaXIYmRkZEDHtRVFcDaGCTXlhbjdUF1WAGfDxFFMaO2agM0NDAzIuK17AtQEKD578fp/AuUDA2Xlw2h6GC1ARk0YnCYQzryj2X/QmAAAtJI/0rIAp7UAAAAASUVORK5CYII=) repeat-x center;
+	border-right: 2px groove #eee;
+}
+.scroller-button-left:hover {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABcCAYAAABTEPRqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUfAy8gidrLFAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACqSURBVEjHY/z/4+l/BjyAheHfLwa8Cv4TUsD4n4ACBoIK/hE04TelJvyjgyMJmvCb5m4gqOD7PQIKGBgJKMAvT4wJBBQwMTAwDHpH0sUKygOKkXEIOJJwUNPeCppHNxNEASp2zzwJZ2N40z3jOIQBFUexwj3jGJJSRsxw2DnDirAbds6wRjKBkYHx/72m/8Mh+w+DnEUHN9Al44wG9XCKzeHgyCHSwCCgAAB7GDC2MUvSYQAAAABJRU5ErkJggg==);
+}
+.scroller-button-right {
+	right: 0;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABcCAYAAABTEPRqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUfAyEhYF7WDAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACiSURBVEjH7ZS9CsJAEIRnJC+sjRZaaqFNXszCyufQaOfuWYmJkh0hBCLswcEdO3yz97PL5nYvCEbl7ggFDzMIQsEwCzMlcJWDJvj4SUoLG91CES7XJhaAjAVxGJiJOCoKiyT8SMiL+qfHIgmS2KwWeK3bs0NYL+f9hLaolwAA2339eYr3Zneovyx4PJ2L6A8Y1h/yP2QDScI0Cbp4s/wnQ3gC00c/1D1DHO8AAAAASUVORK5CYII=) repeat-x center;
+	border-left: 2px groove #eee;
+}
+.scroller-button-right:hover {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABcCAYAAABTEPRqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH3QUfAygRl0Vd6QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACxSURBVEjHY/z/4+l/BjyAheHfLwa8Cv4TUsD4n4ACBoIK/hE04TelJvyjgyMJmvCb5m4gqOD7PQIKGBgJKMAvT4wJBBQwMTAwDHpH0sUKygOKkXEIOJJwUNPeCppHNxNEASODe+ZJBhgbGTMxMDIywLzqnnmCAc6HYiaEaghwzziOZgIa2DnDCrcjd86wxnAk4/97Tf+HQ/YfBjmLDm6gS8YZDerhFJvDwZFDpIFBQAEAuEkwvY3wg6UAAAAASUVORK5CYII=);
+}
+.scroller-content {
+	overflow: hidden;
 }
 
 </style>
-<script type="text/javascript">
-
-$(function() {
-	$("#tabs").tabs();
-	$(".ribbon-button").button();
-});
-
-</script>
 
 <body>
 
 
-<div id="tabs" class="ribbon">
-	<ul class="ribbon-tabs">
-		<li><a href="#tab-quoting">Quoting</a></li>
-		<li><a href="#tab-orders">Orders</a></li>
-		<li><a href="#tab-purchasing">Purchasing</a></li>
-	</ul>
-	<div id="tab-quoting" class="ribbon-tab-content">
-
-		<ul class="ribbon-groups">
-			<li class="ribbon-group">
-				
-				<ul>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>asdfasdf</label>
-							<div>v</div>
-						</button>
-					</li>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>asdfasdf asd asdf asdf</label>
-							<!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAABbSURBVCjPY/jPgB8yDCkFB/7v+r/5/+r/i/7P+N/3DYuC7V93/d//fydQ0Zz/9eexKFgtsejLiv8b/8/8X/WtUBGrGyZLdH6f8r/sW64cTkdWSRS+zpQbgiEJAI4UCqdRg1A6AAAAAElFTkSuQmCC" />-->
-							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAADCAIAAADUVFKvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAXSURBVBhXY2BAA////4eLgNhADBGCMADvQBHvcMAKOgAAAABJRU5ErkJggg==" />
-						</button>
-					</li>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>as</label>
-							<img src="asdf.png" />
-						</button>
-					</li>
-				</ul>
-
-				<label>Group</label>
-			</li>
-			<li class="ribbon-group">
-				
-				<ul>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>asdfasdf</label>
-						</button>
-					</li>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>asdfasdf</label>
-						</button>
-					</li>
-					<li>
-						<button class="ribbon-button">
-							<img src="asdf.png" />
-							<label>asdfasdf</label>
-						</button>
-					</li>
-				</ul>
-
-				<label>Group</label>
-			</li>
-			<li class="ribbon-group">asdfasdf<label>Group</label></li>
-			<li class="ribbon-group">asdfasdf<label>Group</label></li>
-		</ul>
-
+<div id="tabs" class="ribbonbar">
+	<div class="scroller-container">
+		<div class="scroller-buttons">
+			<div class="scroller-button-left"></div>
+			<div class="scroller-button-right"></div>
+		</div>
+		<div class="scroller-content">
+			<ul class="ribbon-tabs scroller-parent">
+				<li><a href="#tab-quoting">Quoting</a></li>
+				<li><a href="#tab-orders">Orders</a></li>
+				<li><a href="#tab-purchasing">Purchasing</a></li>
+				<li><a href="#tab-purchasing2">Purchasing</a></li>
+				<li><a href="#tab-purchasing3">Purchasing</a></li>
+				<li><a href="#tab-purchasing4">Purchasing</a></li>
+			</ul>
+		</div>
 	</div>
-	<div id="tab-orders">
-		
-	</div>
-	<div id="tab-purchasing">
-		
+	<div class="ribbons">
+		<div id="tab-quoting" class="ribbon-tab-content scroller-container">
+			<div class="scroller-buttons">
+				<div class="scroller-button-left"></div>
+				<div class="scroller-button-right"></div>
+			</div>
+			<div class="scroller-content">
+				<div class="ribbon-groups scroller-parent">
+
+					<div class="ribbon-group">
+						<div class="ribbon-buttons">
+							<div class="ribbon-button">
+								<div class="ribbon-button-image"></div>
+								<div class="ribbon-button-label">label line 1 label line two</div>
+							</div>
+							<div class="ribbon-button">
+								<div class="ribbon-button-image"></div>
+								<div class="ribbon-button-label">label line 1<br/>label line two</div>
+								<div class="ribbon-button-icon"></div>
+								<div class="ribbon-button-drop">
+
+									<div class="ribbon-drop-content">
+										<div class="ribbon-options">
+											<div class="ribbon-option">
+												<div class="ribbon-option-image"></div>
+												<div class="ribbon-option-text">
+													<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+													<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+												</div>
+											</div>
+											<div class="ribbon-option">
+												<div class="ribbon-option-image"></div>
+												<div class="ribbon-option-text">
+													<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+													<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="ribbon-group-label">Actions</div>
+					</div>
+
+					<div class="ribbon-group">
+						<div class="ribbon-buttons">
+							<div class="ribbon-button">
+								<div class="ribbon-button-image"></div>
+								<div class="ribbon-button-label">label</div>
+							</div>
+							<div class="ribbon-button">
+								<div class="ribbon-button-image"></div>
+								<div class="ribbon-button-label">label</div>
+								<div class="ribbon-button-icon"></div>
+								<div class="ribbon-button-drop triple-column">
+
+									<div class="ribbon-drop-content">
+										<div class="ribbon-optgroup">
+											<div class="ribbon-optgroup-label">Option Group Title</div>
+											<div class="ribbon-options">
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="ribbon-optgroup">
+											<div class="ribbon-optgroup-label">Option Group Title</div>
+											<div class="ribbon-options">
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+												<div class="ribbon-option">
+													<div class="ribbon-option-image"></div>
+													<div class="ribbon-option-text">
+														<div class="ribbon-option-title">This is the title asdf foo bar fizz buzz</div>
+														<div class="ribbon-option-description">This is the description asdf foo bar fizz buzz</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="ribbon-group-label">Here is a really long group label</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+
+		<div id="tab-orders">
+		</div>
+		<div id="tab-purchasing">
+		</div>
+		<div id="tab-purchasing2">
+		</div>
+		<div id="tab-purchasing3">
+		</div>
+		<div id="tab-purchasing4">
+		</div>
 	</div>
 </div>
-
+<div style="border:1px solid black;">content tester</div>
 
 </body>
 </html>
