@@ -4,7 +4,7 @@
 
 #### About
 
-This was a prototype build of a web element to replicate the Microsoft Office Ribbon Bar.  It was created for a project at work and later scrapped.
+This is a prototype web element to replicate the Microsoft Office Ribbon Bar.  It was created in May 2013 for a project at work, and was later scrapped.
 
 #### Run
 
